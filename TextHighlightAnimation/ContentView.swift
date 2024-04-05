@@ -7,17 +7,36 @@ struct ContentView: View {
     private let sentence = """
 Lorem ipsum dolor sit amet
 """
+    private let targetText = "ipsum dolor"
     
     var body: some View {
         VStack {
             Spacer()
             
-            Text(sentence)
-                .highlight(width)
+            HStack(spacing: 5) {
+                ForEach(textChunks(), id: \.self) {
+                    if $0 == targetText {
+                        Text($0)
+                            .highlight(width)
+                    } else {
+                        Text($0)
+                    }
+                }
+            }
             
             Spacer()
             buttons
         }
+    }
+    
+    private func textChunks() -> [String] {
+        var chunks = sentence
+            .components(separatedBy: targetText)
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+        
+        chunks.insert(targetText, at: 1)
+        
+        return chunks
     }
     
     private var buttons: some View {
