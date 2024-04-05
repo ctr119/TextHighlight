@@ -10,24 +10,10 @@ struct ContentView: View {
             
             Text(
 """
-Lorem ipsum dolor sit amet
+Lorem 
+ipsum dolor sit amet
 """
-            )
-                .padding(2)
-                .background(
-                    GeometryReader {
-                        geometry in
-                        HStack {
-                            RoundedRectangle(cornerRadius: 5)
-                                .fill(Color.yellow)
-                                .frame(
-                                    width: width <= geometry.size.width ? width : geometry.size.width,
-                                    height: geometry.size.height
-                                )
-                            Spacer()
-                        }
-                    }
-                )
+            ).highlight(width)
             
             Spacer()
             buttons
@@ -48,6 +34,35 @@ Lorem ipsum dolor sit amet
                 }
             }
         }
+    }
+}
+
+extension View {
+    func highlight(_ width: CGFloat) -> some View {
+        modifier(HighlightedModifier(width: width))
+    }
+}
+
+struct HighlightedModifier: ViewModifier {
+    let width: CGFloat
+    
+    func body(content: Content) -> some View {
+        content
+            .padding(2)
+            .background(
+                GeometryReader {
+                    geometry in
+                    HStack {
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(Color.yellow)
+                            .frame(
+                                width: width <= geometry.size.width ? width : geometry.size.width,
+                                height: geometry.size.height
+                            )
+                        Spacer()
+                    }
+                }
+            )
     }
 }
 
