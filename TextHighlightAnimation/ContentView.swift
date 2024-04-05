@@ -4,16 +4,16 @@ struct ContentView: View {
     @State private var width: CGFloat = 0
     private let targetWidth: CGFloat = 50
     
+    private let sentence = """
+Lorem ipsum dolor sit amet
+"""
+    
     var body: some View {
         VStack {
             Spacer()
             
-            Text(
-"""
-Lorem 
-ipsum dolor sit amet
-"""
-            ).highlight(width)
+            Text(sentence)
+                .highlight(width)
             
             Spacer()
             buttons
