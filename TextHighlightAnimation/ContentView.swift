@@ -1,55 +1,60 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var width: CGFloat = 0
-    private let targetWidth: CGFloat = 50
+    @State private var isHighlightEnabled = false
     
     private let sentence = """
-Lorem ipsum dolor sit amet
+Lorem ipsum dolor sit amet, consectetur adipiscing elit
 """
-    private let targetText = "ipsum dolor"
     
     var body: some View {
         VStack {
             Spacer()
             
-            HStack(spacing: 5) {
-                ForEach(textChunks(), id: \.self) {
-                    if $0 == targetText {
-                        Text($0)
-                            .highlight(width)
-                    } else {
-                        Text($0)
-                    }
-                }
-            }
+            highligh(words: ["dolor", "adipiscing"], in: sentence)
+                .highlight(isHighlightEnabled)
             
             Spacer()
             buttons
         }
+        .padding()
     }
     
-    private func textChunks() -> [String] {
-        var chunks = sentence
-            .components(separatedBy: targetText)
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+    private func highligh(words: [String], in text: String) -> Text {
+        guard !text.isEmpty && !words.isEmpty else { return Text(text) }
         
-        chunks.insert(targetText, at: 1)
+        var result = Text("")
+        let parts = text.components(separatedBy: " ")
         
-        return chunks
+        for (index, part) in parts.enumerated() {
+            if words.contains(part.trimmingCharacters(in: .punctuationCharacters)) {
+                result = result + Text(part)
+                    .bold()
+                    .foregroundStyle(isHighlightEnabled ? .red : .black)
+                    
+            } else {
+                result = result + Text(part)
+            }
+            
+            if index < parts.count - 1 {
+                result = result + Text(" ")
+            }
+        }
+        
+        return result
     }
     
     private var buttons: some View {
         HStack {
-            Button("Start") {
+            Button("Highlight") {
                 withAnimation {
-                    width += targetWidth
+                    isHighlightEnabled = true
                 }
             }
             
             Button("Reset") {
                 withAnimation {
-                    width = 0
+                    isHighlightEnabled = false
                 }
             }
         }
@@ -57,25 +62,24 @@ Lorem ipsum dolor sit amet
 }
 
 extension View {
-    func highlight(_ width: CGFloat) -> some View {
-        modifier(HighlightedModifier(width: width))
+    func highlight(_ isEnabled: Bool) -> some View {
+        modifier(HighlightedModifier(isEnabled: isEnabled))
     }
 }
 
 struct HighlightedModifier: ViewModifier {
-    let width: CGFloat
+    let isEnabled: Bool
     
     func body(content: Content) -> some View {
         content
             .padding(2)
             .background(
-                GeometryReader {
-                    geometry in
+                GeometryReader { geometry in
                     HStack {
                         RoundedRectangle(cornerRadius: 5)
                             .fill(Color.yellow)
                             .frame(
-                                width: width <= geometry.size.width ? width : geometry.size.width,
+                                width: isEnabled ? geometry.size.width : .zero,
                                 height: geometry.size.height
                             )
                         Spacer()
