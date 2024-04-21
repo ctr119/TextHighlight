@@ -1,6 +1,6 @@
 # Hola! 👋 👾 🎲
 
-Experiment to find out a way of highlighting specific chunks of test like if you had a highlighter.
+Experiment to find out a way of highlighting specific chunks of text like if you had a highlighter.
 
 ## Highlights
 
