@@ -9,3 +9,5 @@ Experiment to find out a way of highlighting specific chunks of test like if you
 - Highlights the specific chunks in red with a fade-in/out animation
 
 ## Recording
+
+![example](https://github.com/ctr119/TextHighlight/assets/6979462/c129fcce-bf4f-49ae-ae5f-69ffc9678ffb)
